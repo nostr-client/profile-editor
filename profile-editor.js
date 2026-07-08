@@ -53,8 +53,10 @@ const TEMPLATE = /* html */ `
     border-color: var(--nc-accent, #7c3aed); }
   textarea { min-height: 4.5em; resize: vertical; line-height: 1.5; }
   .head { display: flex; align-items: center; gap: .9rem; }
-  .avatar { width: 56px; height: 56px; border-radius: 50%; object-fit: cover;
-    background: var(--nc-inset, #f4f2ee); border: 1px solid var(--nc-line, #e9e6e0); }
+  .avatar { width: 56px; height: 56px; border-radius: 50%; flex: none; overflow: hidden;
+    display: grid; place-items: center; color: #fff; font-weight: 700; font-size: 1.4rem;
+    border: 1px solid var(--nc-line, #e9e6e0); }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
   .head .who { font-family: var(--nc-mono, ui-monospace, monospace); font-size: .78rem;
     color: var(--nc-faint, #a8a4b0); overflow-wrap: anywhere; }
   button { font: inherit; cursor: pointer; border: none; border-radius: 999px;
@@ -143,10 +145,20 @@ class NostrProfileEditor extends HTMLElement {
 
     const head = document.createElement('div')
     head.className = 'head'
-    const avatar = document.createElement('img')
+    const avatar = document.createElement('span')
     avatar.className = 'avatar'
-    avatar.alt = ''
-    if (profile.picture) avatar.src = profile.picture
+    const hue = parseInt(this.pubkey.slice(0, 4), 16) % 360
+    avatar.style.background = `linear-gradient(135deg, hsl(${hue} 62% 60%), hsl(${(hue + 55) % 360} 62% 44%))`
+    const display = profile.display_name || profile.name
+    if (display) avatar.textContent = [...display][0].toUpperCase()
+    const showPicture = (url) => {
+      if (!url?.startsWith('https://')) return
+      const img = document.createElement('img')
+      img.alt = ''
+      img.onload = () => { avatar.textContent = ''; avatar.replaceChildren(img) }
+      img.src = url
+    }
+    showPicture(profile.picture)
     const who = document.createElement('div')
     who.className = 'who'
     who.textContent = this.pubkey
@@ -160,7 +172,7 @@ class NostrProfileEditor extends HTMLElement {
       const input = document.createElement(tag)
       if (tag === 'input') input.type = 'text'
       input.value = profile[key] ?? ''
-      if (key === 'picture') input.addEventListener('change', () => { avatar.src = input.value })
+      if (key === 'picture') input.addEventListener('change', () => showPicture(input.value.trim()))
       this._inputs[key] = input
       wrap.append(input)
       form.append(wrap)
