@@ -28,6 +28,8 @@ const FIELDS = [
   ['website', 'Website', 'input'],
   ['nip05', 'NIP-05 (user@domain)', 'input'],
   ['lud16', 'Lightning address', 'input'],
+  ['btc', 'Bitcoin address — on-chain tips', 'input'],
+  ['btc_test', 'Bitcoin testnet address', 'input'],
 ]
 
 const TEMPLATE = /* html */ `
