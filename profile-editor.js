@@ -49,7 +49,7 @@ const TEMPLATE = /* html */ `
     border: 1px solid var(--nc-line, #e9e6e0);
     background: var(--nc-inset, #f4f2ee); color: var(--nc-ink, #201d26);
     width: 100%; box-sizing: border-box; text-transform: none; letter-spacing: normal; }
-  input:focus, textarea:focus { outline: 2px solid var(--nc-accent-soft, #f2ecfd);
+  input:focus, textarea:focus { outline: 2px solid var(--nc-accent, #7a5cff); outline-offset: 1px;
     border-color: var(--nc-accent, #7c3aed); }
   textarea { min-height: 4.5em; resize: vertical; line-height: 1.5; }
   .head { display: flex; align-items: center; gap: .9rem; }
